@@ -38,16 +38,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final String apikey = '67af5e631dcbb4d0981b06996fcd47bc';
-  final String readaccesstoken =
-      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MzkzMmEzZDE3ZTdlYTczZGYxZDZhNjQ3ZTk4NDhjNCIsInN1YiI6IjYzYWIyNWUyNWFkNzZiMDBhZThlODc0MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Dx-x4F_9G8Iw-E6oVoHJ0mMZ4c1DNVrUUNeHXRlNlLw';
   List trendingmovies = [];
   List topratedmovies = [];
   List discovermovies = [];
   List tv = [];
   int _selectedIndex = 0;
   loadmovies() async {
-    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apikey, readaccesstoken),
+    TMDB tmdbWithCustomLogs = TMDB(
+        ApiKeys(Endpoints.TMDB_API_KEY, Endpoints.TMDB_API_READ_ACCESS_TOKEN),
         logConfig: ConfigLogger(
           showLogs: true,
           showErrorLogs: true,
@@ -99,45 +97,51 @@ class _HomeState extends State<Home> {
                       ),
                       itemBuilder:
                           (BuildContext context, int index, pageViewIndex) {
-                        return Container(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DiscoverDescription(
-                                            name: discovermovies[index]
-                                                ['title'],
-                                            bannerurl:
-                                                'https://image.tmdb.org/t/p/w500' +
-                                                    discovermovies[index]
-                                                        ['backdrop_path'],
-                                            posterurl:
-                                                'https://image.tmdb.org/t/p/w500' +
-                                                    discovermovies[index]
-                                                        ['poster_path'],
-                                            description: discovermovies[index]
-                                                ['overview'],
-                                            vote: discovermovies[index]
-                                                    ['vote_average']
-                                                .toString(),
-                                            launch_on: discovermovies[index]
-                                                ['release_date'],
-                                          )));
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: FadeInImage(
-                                image: NetworkImage(
-                                    'https://image.tmdb.org/t/p/w500' +
-                                        discovermovies[index]['poster_path']),
-                                fit: BoxFit.cover,
-                                placeholder:
-                                    AssetImage('assets/images/loading.gif'),
-                              ),
-                            ),
-                          ),
-                        );
+                        return discovermovies.length == 0
+                            ? Container()
+                            : Container(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DiscoverDescription(
+                                                  name: discovermovies[index]
+                                                      ['title'],
+                                                  bannerurl:
+                                                      'https://image.tmdb.org/t/p/w500' +
+                                                          discovermovies[index]
+                                                              ['backdrop_path'],
+                                                  posterurl:
+                                                      'https://image.tmdb.org/t/p/w500' +
+                                                          discovermovies[index]
+                                                              ['poster_path'],
+                                                  description:
+                                                      discovermovies[index]
+                                                          ['overview'],
+                                                  vote: discovermovies[index]
+                                                          ['vote_average']
+                                                      .toString(),
+                                                  launch_on:
+                                                      discovermovies[index]
+                                                          ['release_date'],
+                                                )));
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: FadeInImage(
+                                      image: NetworkImage(
+                                          'https://image.tmdb.org/t/p/w500' +
+                                              discovermovies[index]
+                                                  ['poster_path']),
+                                      fit: BoxFit.cover,
+                                      placeholder: AssetImage(
+                                          'assets/images/loading.gif'),
+                                    ),
+                                  ),
+                                ),
+                              );
                       },
                       itemCount:
                           discovermovies != null ? discovermovies.length : 0,
